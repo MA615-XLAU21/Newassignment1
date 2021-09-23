@@ -1,0 +1,76 @@
+---
+title: "newassignment1"
+author: "Xiang Li"
+date: "9/23/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+#Import the database and then choose the data needed to be anylized.
+#mtcars
+#Format
+#A data frame with 32 observations on 11 (numeric) variables.
+#[, 1]	mpg	Miles/(US) gallon
+#[, 2]	cyl	Number of cylinders
+#[, 3]	disp	Displacement (cu.in.)
+#[, 4]	hp	Gross horsepower
+#[, 5]	drat	Rear axle ratio
+#[, 6]	wt	Weight (1000 lbs)
+#[, 7]	qsec	1/4 mile time
+#[, 8]	vs	Engine (0 = V-shaped, 1 = straight)
+#[, 9]	am	Transmission (0 = automatic, 1 = manual)
+#[,10]	gear	Number of forward gears
+#[,11]	carb	Number of carburetors
+```{r}
+# call built-in data mtcars.
+data(mtcars)
+# Select only car models where mpg<20
+mtcars_mpg2 <- mtcars[mtcars$mpg < 20,]
+# Reduce the variables to mpg, cyl, disp, hp, gears
+mtcars_mpg2 <- mtcars_mpg2[, c(1,2,3,4,10)]
+```
+
+#Use the function from hand_function.R
+```{r}
+# read the R file hand_functions.R so that it can be used
+# notice that with echo = TRUE 
+source(file = "hand_functions.R", echo = TRUE)
+
+# Now use the function from hand_functions.R
+sp_out <- sum_special(mtcars_mpg2)
+```
+
+#Plot mtcars with selected data to illustrate that how doess the mpg changing trend while displacement is iincreasing.
+#theme_minimal() :A minimalistic theme with no background annotations.
+#theme_classic(): A classic-looking theme, with x and y axis lines and no gridlines.
+```{r}
+ggplot(mtcars_mpg2) +
+  aes(x = disp, y = mpg) +
+  geom_point(shape = "bullet", size = 4L, colour = "#B22222") +
+  geom_smooth(span = 0.5)+
+  theme_minimal()
+```
+```{r}
+#library(esquisse)
+#mtcars_mpg2<-mtcars[as.factor(mtcars$cyl)]
+#esquisser(mtcars_mpg2)
+```
+# note that this boxplot cannot be made with esquisse() unless
+# the data is adjusted.  What adjustment is needed? 
+
+#ANSWER: Use as.factor(cyl) insteal of cyl becasue a boxplot is a method for graphically depicting groups of numerical data through their quartiles. Therefore, I need to use as.factor to change cyl to a classification variable.
+
+```{r}
+
+ggplot(mtcars_mpg2, aes(x=as.factor(cyl), y=mpg)) + 
+  geom_boxplot(fill="slateblue", alpha=0.2) + 
+  xlab("cyl")
+
+```
+
